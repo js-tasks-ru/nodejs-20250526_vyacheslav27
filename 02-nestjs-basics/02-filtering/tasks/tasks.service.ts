@@ -64,18 +64,18 @@ export class TasksService {
       const pageNum = Number(page);
       const limitNum = Number(limit);
 
-      if (pageNum >= 0 && limitNum >= 0) {
-        const startIndex = pageNum * limitNum;
+      if (pageNum >= 1 && limitNum >= 1) {
+        const startIndex = (pageNum - 1) * limitNum;
         const endIndex = startIndex + limitNum;
 
         values = values.slice(startIndex, endIndex);
       } else {
-        throw new BadRequestException('page limit должны быть положительными числами или 0');
+        throw new BadRequestException('page limit должны быть положительными числами');
       }
     }
-
-    if(values.length === 0) {
-      throw new NotFoundException('Задачи не найдены')
+    
+    if(!values) {
+      throw new NotFoundException('Ошибка при получении задач')
     }
 
     return values;
