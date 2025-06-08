@@ -1,7 +1,0 @@
-{
-  "entryFile": "main",
-  "sourceRoot": ".",
-  "compilerOptions": {
-    "tsConfigPath": "./tsconfig.json"
-  }
-}
