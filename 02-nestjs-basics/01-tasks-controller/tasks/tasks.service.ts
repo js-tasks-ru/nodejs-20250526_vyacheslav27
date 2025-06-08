@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { Task } from "./task.model";
 
 @Injectable()
@@ -10,21 +10,29 @@ export class TasksService {
   }
 
   getTaskById(id: string): Task {
-    return this.tasks.find(item => item.id === id);
+    const task = this.tasks.find(item => item.id === id);
+
+    if (!task) {
+      throw new NotFoundException('Задача не найдена')
+    }
+
+    return task;
   }
 
   createTask(task: Task): Task {
-    this.tasks.push(task);
-    return task;
+    this.tasks.push({ ...task, id: String(crypto.randomUUID()) });
 
+    return task;
   }
 
   updateTask(id: string, update: Task): Task {
     const index = this.tasks.findIndex(item => item.id === id);
 
-    if (index === -1) return null;
+    if (index === -1) {
+      throw new NotFoundException('Не найдена задача с указанным id');
+    };
 
-    const newTask = { ...this.tasks[Number(index)], ...update }
+    const newTask = { ...this.tasks[Number(index)], ...update };
 
     this.tasks[Number(index)] = newTask;
 
@@ -33,8 +41,10 @@ export class TasksService {
 
   deleteTask(id: string): Task {
     const task = this.getTaskById(id);
-    
-    if (!task) return null;
+
+    if (!task) {
+      throw new NotFoundException('Не найдена задача с указанным id');
+    };
 
     this.tasks = this.tasks.filter(item => item.id !== id);
 
