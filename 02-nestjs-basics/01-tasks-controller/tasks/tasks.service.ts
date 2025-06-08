@@ -20,9 +20,10 @@ export class TasksService {
   }
 
   createTask(task: Task): Task {
-    this.tasks.push({ ...task, id: String(crypto.randomUUID()) });
+    const taskWithId = { ...task, id: String(crypto.randomUUID()) }
+    this.tasks.push(taskWithId);
 
-    return task;
+    return taskWithId;
   }
 
   updateTask(id: string, update: Task): Task {
